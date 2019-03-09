@@ -43,22 +43,31 @@ connection.query("SELECT * FROM products", function (err, res) {
     inquirer.prompt(questions).then(answers => {
         console.log("Validating order information");
         // var filteredItems = res.filter(result => result.item_id === answers.idNum)
-
+        var userChoiceId = parseInt(answers.idNum)
         // tests to match the user input item id with the res object item id
         var filteredItems = res.filter(function (result) { return result.item_id === parseInt(answers.idNum) })
+        console.log(filteredItems)
 
-        console.log(filteredItems[0].stock_quantity);
-        console.log(parseInt(answers.qty))
+        var filteredItem = filteredItems[0].stock_quantity;
+        var userQty = parseInt(answers.qty)
+        // console.log(parseInt(answers.qty))
 
-        if (parseInt(filteredItems[0].stock_quantity) < parseInt(answers.qty)) {
+        if (filteredItem < userQty) {
             console.log("insufficient quantity")
         }
         else {
+
+            filteredItem -= userQty
+
             // subtract quantity from sql database
             // show price of item * qty selected
-            connection.query("UPDATE products SET stock_quantity", function(err,res){
+
+            // 'UPDATE users SET foo = ?, bar = ?, baz = ? WHERE id = ?'
+            connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?", [filteredItem,userChoiceId], function (err, res) {
                 if (err) throw err;
-                console.log(res.stock_quantity -= parseInt(answers.qty))
+                console.log(userQty * filteredItems[0].price )
+                // add price comment
+                connection.end();
             })
         }
 
