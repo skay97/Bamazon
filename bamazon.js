@@ -66,16 +66,12 @@ connection.query("SELECT * FROM products", function (err, res) {
             connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?", [filteredItem,userChoiceId], function (err, res) {
                 if (err) throw err;
                 console.log(userQty * filteredItems[0].price )
-                // add price comment
+                
                 connection.end();
             })
         }
 
     });
-
-    // if (res.filter(res.the id of the specific item.stock_quantity< answers.qty)) {
-    //     console.log("insufficient quantity")
-    // }
 
 });
 
